@@ -1,5 +1,7 @@
 "use strict"
 
+const UserStorage = require('../../models/UserStorage')
+
 
 const output = {
 
@@ -12,33 +14,30 @@ const output = {
     }
 }
 
-// user로 해당 데이터와 프론트에서 보내는 데이터와 인증 해보기
-const users = {
-    id : ["승찬", "원혁", "민지"],
-    psword : ["1234", "1234", "123456"]
-}
 
 const process = {
     login : (req, res) => {
         const id  = req.body.id
         const psword = req.body.psword
 
+        // const userStorage  = new UserStorage() ; -> 인스턴스화 하지 않고 바로 Class에 static을 추가하여 바로 사용가능
+        // console.log(UserStorage.users); // -> class에 static을 하지 않으면 undefined 나옴
         // console.log(id);
         // console.log(psword);
 
+        const users = UserStorage.getUsers("id", "psword")  // 내가 필요한 데이터를 가져올 수 있다.
+
+        const response = {};
         if(users.id.includes(id)){
             const idx = users.id.indexOf(id);
             if(users.psword[idx] === psword){
-                return res.json({
-                    success : true,
-                });
+                response.success = true;
+                return res.json(response);
             }
         }
-
-        return res.json({
-            success : false,
-            msg : "로그인을 실패하셨습니다."
-        })
+        response.success = false;
+        response.msg = "로그인을 실패하였습니다."
+        return res.json(response)
     }
 }
 
