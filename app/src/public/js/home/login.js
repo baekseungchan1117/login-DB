@@ -26,4 +26,6 @@ function login() {
            },   // 내가 전달하는 데이터가 JSON이라고 알려줘야한다. 
         body : JSON.stringify(req)
     })
+    .then((res) => res.json())
+    .then((res) => console.log(res));
 }
