@@ -21,7 +21,7 @@ function register() {
 
     }
 
-    console.log(req);
+    // console.log(req);
     // console.log(JSON.stringify(req));
     
     fetch('/register', {    // 서버에서 받을 API를 만들어줘야 한다. 
@@ -34,13 +34,13 @@ function register() {
     .then((res) => res.json())
     .then((res) =>{
         if(res.success){
-            location.href = "/";
+            location.href = "/login";
         } else {
             alert(res.msg)
         }
     })
     .catch((err) => {
         // console.error(new Error("로그인 중 에러 발생"));
-        console.error("로그인 중 에러 발생");
+        console.error("회원가입 중 에러 발생");
     })
 }
