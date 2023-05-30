@@ -30,7 +30,6 @@ class UserStorage {
             newUser[info] = users[info][idx];
             return newUser;
         }, {});
-
         return userInfo
     }
 
@@ -39,7 +38,7 @@ class UserStorage {
         users.id.push(userInfo.id);
         users.name.push(userInfo.name);
         users.psword.push(userInfo.psword)
-        console.log(users);
+        return { success : true }
     }
 }
 

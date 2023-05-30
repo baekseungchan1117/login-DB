@@ -8,12 +8,12 @@ class User {
     }
 
     login() {
-        const body = this.body;
-        const { id, psword } = UserStorage.getUserInfo(body.id);
+        const client = this.body;
+        const { id, psword } = UserStorage.getUserInfo(client.id);
         // console.log(id, psword);
 
         if(id){
-            if(id === body.id && psword === body.psword){
+            if(id === client.id && psword === client.psword){
                 return { success:true };
             }
             return { success : false, msg : "비밀번호가 틀렸습니다."};
@@ -23,7 +23,8 @@ class User {
 
     register() {
         const client  = this.body;
-        UserStorage.save(client)
+        const response = UserStorage.save(client);
+        return response;
     }
 }
 
