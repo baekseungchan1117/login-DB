@@ -16,17 +16,26 @@ class UserStorage {
         return userInfo
     }
 
-    // user로 해당 데이터와 프론트에서 보내는 데이터와 인증 해보기
-    // static 정적 변수로 만들어주면 클래스 자체에서 users라는 자체 접근이 가능한다.
-    static getUsers(...fileds){ // filed는 변수명
-        // const users = this.#users;
-        const newUsers = fileds.reduce((newUsers, filed) => {
+    static #getUsers(data, isAll, fields){
+        const users = JSON.parse(data);
+        if(isAll) return users
+        const newUsers = fields.reduce((newUsers, filed) => {
             if(users.hasOwnProperty(filed)){
                 newUsers[filed] = users[filed];
             }
             return newUsers;
         }, {});
         return newUsers;
+    }
+
+    // user로 해당 데이터와 프론트에서 보내는 데이터와 인증 해보기
+    // static 정적 변수로 만들어주면 클래스 자체에서 users라는 자체 접근이 가능한다.
+    static getUsers(isAll, ...fields){ // filed는 변수명
+        return fs.readFile('./src/databases/users.json')
+        .then((data) =>{
+            return this.#getUsers(data, isAll, fields) // 가독성을 좋게 하기위해 따로 만들어둠
+        })
+        .catch(console.error) // (err) => console.error(err) 파라미터로 넘어온 변수를 실행하는 함수로 넘기면 생략 가능
     }
 
     static getUserInfo(id){
@@ -39,13 +48,18 @@ class UserStorage {
     }
 
 
-    static save(userInfo) {
-        // const users = this.#users;
+    static async save(userInfo) {
+        const users = await this.getUsers(true);
+        if (users.id.includes(userInfo.id)){
+            throw "이미 존재하는 아이디입니다.";
+        }
         users.id.push(userInfo.id);
         users.name.push(userInfo.name);
-        users.psword.push(userInfo.psword)
-        return { success : true }
+        users.psword.push(userInfo.psword);
+        fs.writeFile('./src/databases/users.json', JSON.stringify(users));
+        return { success: true}
     }
+    
 }
 
 module.exports = UserStorage
